@@ -1,0 +1,156 @@
+---
+title: "case3_markdown"
+author: "Tianye Song"
+date: "11/7/2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## sensus data keys
+
+There are various kinds of data in the sensus data collected. What are they?
+
+```{r data interpretation}
+## this will print out the list of folder names in data directory, which gives some initial impression of the types of data. 
+global<-dir('~/Documents/sys6018_cs3_data/round_2/') 
+print(global)
+```
+
+The quantity of data is massive. It would then be wise to remove some of the uninteresting data..
+At first glance, "BatteryDatum" does not interest me. "CellTowerDatum" does not interest me either.
+
+```{r taking out unwanted folder names}
+## remove batteryDatum and celltowerDatum from list of attributes interested in. 
+global <- global[-c(3,4)]
+print(global)
+```
+
+There are 20 entries left. Start investigating on the most strange ones.
+Let's start with AccelerometerDatum.
+
+```{r include=FALSE}
+library(SensusR) # import SensusR library to read in and parse data
+data.path = system.file("extdata", "example_data", package="SensusR")
+data = sensus.read.json(data.path)
+head(data$AccelerometerDatum)
+```
+ 
+Looks like accelerometer data contains (x,y,z) tuples that describe the location of the device (perhaps acceleration of the device) in the 3D space. 
+
+My investigation is mainly focused on HR. Keep this data for now since this records the spatial aspect of the device, further the wrist of the device user.
+
+Keep on investigating.
+```{r investigating AltitudeDatum}
+head(data$AltitudeDatum)
+```
+
+As the name suggests, AltitudeDatum records how much 'up' the user is. This could be interesting considering the user's altitude will change when he/she steps up stairs, and the action of stepping up stairs could have effects on user's Heart Rate.
+
+So next, what is the LightDatum?
+
+```{r investigating LightDatum}
+head(data$LightDatum)
+```
+
+LightDatum measures the brightness. Not interested in this for now.. delete.
+```{r taking out lightDatum}
+global <- global[-3]
+print(global)
+```
+
+next, look at location datum. This should be useful..
+
+```{r investigating location datum}
+head(data$LocationDatum)
+```
+
+the locationDatum records (lat, long) tuples with corresponding accuracy rating for each measurement. Defnitely worth keeping. 
+
+next look at MicrosoftBandContactDatum, MicrosoftBandDistanceDatum, MicrosoftBandGsrDatum
+```{r investigating MicrosoftBandContactDatum}
+head(data$MicrosoftBandContactDatum)  
+
+```
+looks like all the data with MicrosoftBand[a-z]* are missing in the example data set. Keep them there for now.
+
+what about ParticipationRewardDatum?
+```{r investigating ParticipationRewardDatum}
+head(data$ParticipationRewardDatum)  
+```
+emm... can't make much sense.
+
+and PointOfInterestProximityDatum?
+```{r investigating PointOfInterestProximityDatum}
+head(data$PointOfInterestProximityDatum)  
+```
+Null in example data.
+
+and ProtocolReportDatum
+```{r investigating ProtocolReportDatum}
+head(data$ProtocolReportDatum)  
+```
+This data looks like the usage conditions by the user. Does not seem interesting. 
+```{r take out ProtocolReportDatum}
+global <- global[-12]
+print(global)
+```
+
+Now ScreenDatum
+```{r investigating ScreenDatum}
+head(data$ScreenDatum)  
+```
+this is the on/off situation of the screen of the band. not interesting. 
+
+```{r take out ScreenDatum}
+global <- global[-12]
+print(global)
+```
+
+Now ScriptDatum
+```{r investigating ScriptDatum}
+head(data$ScriptDatum)  
+```
+
+can't make sense.
+
+Now ScriptRunDatum
+```{r investigating ScriptRunDatum}
+head(data$ScriptRunDatum)  
+```
+
+can't make sense.
+
+Now SmsDatum
+```{r investigating SmsDatum}
+head(data$SmsDatum)  
+```
+Null. 
+
+SoundDatum
+```{r investigating SoundDatum}
+head(data$SoundDatum)  
+```
+the sound of the surrounding environment. Potentially interesting. Decided to keep. 
+
+TelephonyDatum
+```{r investigating TelephonyDatum}
+head(data$TelephonyDatum)  
+```
+the call duration of the user. not interested. take out.
+```{r take out TelephonyDatum}
+global <- global[-16]
+print(global)
+```
+
+WlanDatum
+```{r investigating WlanDatum}
+head(data$WlanDatum)  
+```
+describing network connection situation. not interested. take out
+```{r take out WlanDatum}
+global <- global[-16]
+print(global)
+```
